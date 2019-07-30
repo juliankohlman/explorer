@@ -1,12 +1,34 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import './styles/main.scss';
+import ApolloClient from 'apollo-boost';
+import { ApolloProvider } from 'react-apollo';
+import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import Landing from './pages/Landing';
+import Genre from './pages/Genre';
+// import Detail from './pages/Detail';
+//* Test Details component
+import Details from './pages/Details';
+// import NowPlaying from './pages/NowPlaying';
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+const client = new ApolloClient({
+	uri: '/.netlify/functions/graphql',
+	fetch: fetch
+});
+
+const rootElement = document.getElementById('root');
+ReactDOM.render(
+	<Router>
+		<ApolloProvider client={client}>
+			<Switch>
+				<Route exact path="/" component={Landing} />
+
+				<Route exact path="/genre/:key" component={Genre} />
+
+				<Route exact path="/detail/:id" component={Details} />
+			</Switch>
+		</ApolloProvider>
+	</Router>,
+	rootElement
+);
